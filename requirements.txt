@@ -3,5 +3,14 @@ gymnasium
 numpy
 pygame
 pillow
-torch
 safetensors
+
+# PyTorch is required but NOT listed here so you can install the version
+# that matches your hardware (CPU-only or CUDA).
+# Install it manually before running:
+#   CPU:  pip install torch
+#   CUDA: pip install torch --index-url https://download.pytorch.org/whl/cu126
+# See https://pytorch.org/get-started/locally/ for all options.
+
+# Optional (for training plots):
+# matplotlib

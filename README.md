@@ -39,6 +39,11 @@ Connect 4 Plus is classic Connect Four with a twist: a **neutral coin** is rando
 ## Quick Start
 
 ```bash
+# Install PyTorch first (not in requirements.txt so you can pick CPU or CUDA):
+pip install torch                                                  # CPU-only
+# pip install torch --index-url https://download.pytorch.org/whl/cu126  # CUDA 12.6
+# See https://pytorch.org/get-started/locally/ for all options.
+
 pip install -r requirements.txt
 python training.py              # sample DQN self-play training
 python main.py ruleBot myBot    # run a match (each bot gets first move once)
