@@ -70,7 +70,10 @@ from gymnasium.utils import EzPickle
 
 from pettingzoo import AECEnv
 from pettingzoo.utils import wrappers
-from pettingzoo.utils.agent_selector import AgentSelector
+try:
+    from pettingzoo.utils.agent_selector import AgentSelector
+except ImportError:
+    from pettingzoo.utils.agent_selector import agent_selector as AgentSelector
 
 
 def get_image(path):
