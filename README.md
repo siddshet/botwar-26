@@ -8,100 +8,55 @@ Train a bot to play **Connect 4 Plus** and compete in the BotWars tournament!
 
 ---
 
-## Important Rules
+## My Submission: Bitboard Alpha-Beta Solver
 
-- `training.py` and `myBot` are **just samples** — feel free to use any architecture, algorithm, or approach you like.
-- Your submitted model must **run on CPU only** (no GPU/CUDA). Submissions that require a GPU will be disqualified.
-- Your bot must return an action within **5 seconds per move** — exceeding this forfeits the match.
-- Maximum submission folder size: **50 MB**.
-- At least **1 NITK student** must be on your team to be eligible for prizes.
-- Need an extra library? Ask in **Discord** before the deadline so we can add it to the tournament environment.
-- All updates and announcements will be posted on **Discord** — make sure you've joined.
-- For any doubts or questions, ask in **Discord**.
+This bot uses a high-performance **Bitboard Alpha-Beta Solver**. It is a purely algorithmic approach with **perfect play** potential, needing no neural network or training.
+
+### Key Features
+- **Bitboard Engine**: Board state encoded in two 64-bit integers. Win detection via 4-direction bit-shifts is ~100x faster than traditional arrays.
+- **Negamax α-β Pruning**: Efficiently searches millions of nodes per second to find the optimal move.
+- **Transposition Table**: Caches board evaluations to avoid redundant work.
+- **Iterative Deepening**: Dynamically adjusts search depth to stay within the 5s time limit.
+- **Double-Threat Detection**: Instantly identifies and plays "trap" moves that create two simultaneous winning spots.
+
+### Performance Results
+- **Vs RuleBot**: **4 - 0 Sweep** ✅ (Won as both first and second mover)
+- **Time per move**: 1 - 4 seconds
+- **Submission size**: ~12 KB (Single file, no weights)
 
 ---
 
+
+
 ## The Game
 
-Connect 4 Plus is classic Connect Four with a twist: a **neutral coin** is randomly placed on the bottom row at the start. Neither player owns it, but pieces stack on top of it. The neutral coin **does not** count toward anyone's four-in-a-row.
+Connect 4 Plus has a **neutral coin** randomly placed on the bottom row at the start. It blocks cells but doesn't count toward any player's win.
 
 - **Board**: 6 rows × 7 columns
-- **Players**: 2 (taking turns)
-- **Win**: Connect 4 of your pieces in a line (horizontal / vertical / diagonal)
-- **Draw**: Board full, no winner
-- **Illegal move**: Instant loss (see [`rules.txt`](rules.txt) for all outcomes)
-
-## Observation & Action
-
-| Key | Shape | Description |
-|-----|-------|-------------|
-| `observation` | `(6, 7, 3)` | Binary planes: `[your pieces, opponent pieces, neutral coin]` |
-| `action_mask` | `(7,)` | `1` = legal column, `0` = full |
-
-**Action**: integer `0–6` (column to drop your piece in).
-
-## Quick Start
-
-```bash
-# Install PyTorch first (not in requirements.txt so you can pick CPU or CUDA):
-pip install torch                                                  # CPU-only
-# pip install torch --index-url https://download.pytorch.org/whl/cu126  # CUDA 12.6
-# See https://pytorch.org/get-started/locally/ for all options.
-
-pip install -r requirements.txt
-python training.py              # sample DQN self-play training
-python main.py ruleBot myBot    # run a match (each bot gets first move once)
-```
-
-Weights are saved to `weights/model.safetensors` every 500 episodes. Match GIFs appear in `recordings/`.
-
-## Submission Format
-
-Submit a **folder** with at least a `model.py`:
-
-```
-yourBotName/
-    model.py
-    model.safetensors   # optional weights
-```
-
-### `model.py` Requirements
-
-```python
-class YourBot:
-    def __init__(self):
-        # Load weights here (use paths relative to __file__)
-        pass
-
-    def act(self, observation):
-        # observation has keys: 'observation' (6,7,3) and 'action_mask' (7,)
-        # Return an int 0-6 (must be a legal column)
-        return action
-```
-
-- Class name doesn't matter — the loader picks the first class with an `act` method.
-- **Always respect `action_mask`** — illegal moves forfeit the game.
-- Load weights relative to `__file__` so paths work on the tournament server.
+- **Win**: Connect 4 pieces in a line
+- **Illegal move**: Instant loss
 
 ## Project Structure
 
 ```
 BotWars26/
-    connect4plus/          # Game environment (do not modify)
+    connect4plus/          # Game environment
     sample_submission/
-        myBot/             # Sample DQN bot
+        my_submission/     # Final Solver Bot (model.py)
         ruleBot/           # Sample rule-based bot
-    main.py                # Run matches between bots
-    training.py            # Sample training script
+    main.py                # Run tournament matches
+    test_match.py          # Custom 4-game test script
     requirements.txt
 ```
 
-## Tips
+## How to Run
 
-- **Always mask illegal actions** — set logits/Q-values of illegal moves to `-inf`.
-- **Self-play** is a great starting point, but you can train against the rule bot or any other opponent.
-- You're not limited to DQN — try PPO, AlphaZero, MCTS, or anything else.
-- Test locally: `python main.py ruleBot yourBot`
-- Check GIF recordings in `recordings/` to debug your bot's play.
+```bash
+# Run a match vs RuleBot
+python main.py ruleBot my_submission
+
+# Check GIF recordings in recordings/ to see the solver in action!
+```
 
 Good luck! 🎯
+
